@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 const useTodoStore = create(persist((set) => ({
   todos: [],
+  filter: "all",
   addTodo: (todo) =>
     set((state) => ({
       todos: [...state.todos, { text: todo, completed: false }],
@@ -16,6 +17,7 @@ const useTodoStore = create(persist((set) => ({
       ),
     })),
   clearTodos: () => set({ todos: [] }),
+  setFilter: (filter) => set({filter}),
 }),
 {
   name: "todo-storage", //key in local storage
