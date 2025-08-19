@@ -22,7 +22,7 @@ function TodoApp() {
          <button onClick={handleAdd}>Add</button>
          <button onClick={clearTodos} style={{ marginLeft: "10px" }}>Clear All</button>
 
-         <ul style={{ listStyleType: "none", padding: 0 }}>
+         <ul style={{ listStyleType: "none", padding: 0 ,textAlign:"left"}}>
             {todos.map((todo,index) => (
                 <li key={index}
                 style={{

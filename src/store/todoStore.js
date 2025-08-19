@@ -1,6 +1,7 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const useTodoStore = create((set) => ({
+const useTodoStore = create(persist((set) => ({
   todos: [],
   addTodo: (todo) =>
     set((state) => ({
@@ -15,6 +16,10 @@ const useTodoStore = create((set) => ({
       ),
     })),
   clearTodos: () => set({ todos: [] }),
-}));
+}),
+{
+  name: "todo-storage", //key in local storage
+}
+));
 
 export default useTodoStore;
