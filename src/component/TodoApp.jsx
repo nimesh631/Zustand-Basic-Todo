@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useTodoStore from '../store/todoStore'
 
 function TodoApp() {
-    const {todos, addTodo, removeTodo, toggleTodo, clearTodos} = useTodoStore();
+    const {todos, addTodo, removeTodo, toggleTodo, clearTodos, filter, setFilter} = useTodoStore();
     const [text, setText] = useState("");
 
     const handleAdd = () => {
@@ -11,6 +11,12 @@ function TodoApp() {
         setText("");
     }
 
+    const filteredTodos = todos.filter((todo)=> {
+      if(filter === "active") return !todo.completed;
+      if(filter === "completed") return todo.completed;
+      return true; //all
+
+    })
   return (
     <div style={{textAlign: "center", marginTop: "50px" }}>
         <h1>Todo List</h1>
@@ -22,8 +28,40 @@ function TodoApp() {
          <button onClick={handleAdd}>Add</button>
          <button onClick={clearTodos} style={{ marginLeft: "10px" }}>Clear All</button>
 
+         {/* filter buttons */}
+          <div style={{ marginTop: "20px" }}>
+            <button
+            onClick={()=> setFilter("all")}
+             style={{
+            marginLeft: "10px",
+            fontWeight: filter === "all" ? "bold" : "normal",
+          }}
+            >
+              All
+            </button>
+
+                 <button
+            onClick={()=> setFilter("active")}
+             style={{
+            marginLeft: "10px",
+            fontWeight: filter === "active" ? "bold" : "normal",
+          }}
+            >
+              Active
+            </button>
+
+                 <button
+            onClick={()=> setFilter("completed")}
+             style={{
+            marginLeft: "10px",
+            fontWeight: filter === "completed" ? "bold" : "normal",
+          }}
+            >
+              Completed
+            </button>
+          </div>
          <ul style={{ listStyleType: "none", padding: 0 ,textAlign:"left"}}>
-            {todos.map((todo,index) => (
+            {filteredTodos.map((todo,index) => (
                 <li key={index}
                 style={{
                   marginBottom: "10px",
