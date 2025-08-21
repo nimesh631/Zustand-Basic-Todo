@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import useTodoStore from '../store/todoStore'
 
 function TodoApp() {
-    const {todos, addTodo, removeTodo, toggleTodo, clearTodos, filter, setFilter} = useTodoStore();
+    const {todos, addTodo, removeTodo, toggleTodo, clearTodos, filter, setFilter,editTodo} = useTodoStore();
     const [text, setText] = useState("");
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [editText, setEditText] = useState("");
 
     const handleAdd = () => {
         if(text.trim() === "") return;
@@ -11,12 +13,21 @@ function TodoApp() {
         setText("");
     }
 
+  const handleEditSave = (index) => {
+    if (editText.trim() === "") return;
+    editTodo(index, editText);
+    setEditingIndex(null); // exit edit mode
+    setEditText("");
+  };
+
+
     const filteredTodos = todos.filter((todo)=> {
       if(filter === "active") return !todo.completed;
       if(filter === "completed") return todo.completed;
       return true; //all
-
     })
+
+
   return (
     <div style={{textAlign: "center", marginTop: "50px" }}>
         <h1>Todo List</h1>
@@ -35,16 +46,19 @@ function TodoApp() {
              style={{
             marginLeft: "10px",
             fontWeight: filter === "all" ? "bold" : "normal",
+            fontSize: filter === "all" ? "18px" : "14px",
+
           }}
             >
               All
             </button>
 
-                 <button
+            <button
             onClick={()=> setFilter("active")}
              style={{
             marginLeft: "10px",
             fontWeight: filter === "active" ? "bold" : "normal",
+            fontSize: filter === "active" ? "18px" : "14px",
           }}
             >
               Active
@@ -55,6 +69,8 @@ function TodoApp() {
              style={{
             marginLeft: "10px",
             fontWeight: filter === "completed" ? "bold" : "normal",
+            fontSize: filter === "completed" ? "18px" : "14px",
+
           }}
             >
               Completed
@@ -72,7 +88,34 @@ function TodoApp() {
                   onChange={()=>toggleTodo(index)}
                   style={{marginRight: "10px"}}
                    />
-                {index+1}. {todo.text} <button onClick={()=>removeTodo(index)}>❌</button>
+
+                   {/* if editing this todo */}
+                   {editingIndex === index ? (
+                    <>
+                    <input
+                     type="text"
+                     value={editText}
+                     onChange={(e) => setEditText(e.target.value)}
+                    />
+                    <button onClick={()=>handleEditSave(index)}>Save</button>
+                  <button onClick={() => setEditingIndex(null)}>Cancel</button>
+
+                    </>
+                   ):(
+                    <>
+                       {todo.text}
+                <button
+                  onClick={() => {
+                    setEditingIndex(index);
+                    setEditText(todo.text);
+                  }}
+                  style={{ marginLeft: "10px" }}
+                >
+                  ✏️ Edit
+                </button>
+                <button onClick={() => removeTodo(index)}>❌</button>
+              </>
+                   )}
                 </li>
             ))}
          </ul>

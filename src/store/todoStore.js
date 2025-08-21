@@ -18,6 +18,11 @@ const useTodoStore = create(persist((set) => ({
     })),
   clearTodos: () => set({ todos: [] }),
   setFilter: (filter) => set({filter}),
+  editTodo: (index,newText)=> set((state)=>({
+    todos:state.todos.map((todo,i) => 
+      i===index?{...todo,text:newText} : todo
+    ),
+  }))
 }),
 {
   name: "todo-storage", //key in local storage
